@@ -176,40 +176,43 @@
         <p>&copy; 2026 StreamPlay VIP. All rights reserved.</p>
     </footer>
 
-    <!-- MODAL POPUP -->
+    <!-- MODAL POPUP (Berisi Video Pendek Baru) -->
     <div id="shopeeModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-2 sm:p-4">
         <div class="relative w-[95%] max-w-lg h-auto max-h-[90vh] bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden shadow-2xl popup-overlay flex flex-col items-center">
             
-            <!-- Tombol Close (Saat diklik membuka Smartlink & Melanjutkan Video) -->
+            <!-- Tombol Close (Membuka Smartlink + Lanjut Video) -->
             <button id="closeBtn" onclick="closeShopeeModal()" class="hidden absolute top-3.5 right-3.5 bg-slate-800/90 hover:bg-rose-600 text-white w-9 h-9 rounded-full flex items-center justify-center transition duration-300 z-20 shadow-lg border border-white/40 text-base font-bold cursor-pointer">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
-            <!-- Link & Gambar Popup -->
-            <a id="shopeeLink" href="#" target="_blank" class="block w-full text-center group flex flex-col h-full">
+            <!-- Area Video & Tombol Link Pop-up -->
+            <div class="w-full flex flex-col h-full">
+                <!-- Pemutar Video di dalam Pop-up -->
                 <div class="w-full flex-grow overflow-hidden bg-black flex items-center justify-center p-1">
-                    <img id="shopeeImage" src="" alt="Promo Banner" class="w-full h-auto max-h-[78vh] object-contain group-hover:scale-105 transition duration-300">
+                    <video id="popupVideoPlayer" class="w-full h-auto max-h-[75vh] object-contain" autoplay muted loop playsinline>
+                        <source id="popupVideoSource" src="" type="video/mp4">
+                        Browser Anda tidak mendukung video.
+                    </video>
                 </div>
-                <div class="p-3.5 bg-gradient-to-r from-rose-600 to-amber-500 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-inner">
+                <!-- Tombol Klik Mengarah ke Smartlink Adsterra -->
+                <a id="shopeeLink" href="https://www.profitableratecpmnetwork.com/i5gpw4k52u?key=fe139b5529deb5921915d705b9e976d2" target="_blank" class="p-3.5 bg-gradient-to-r from-rose-600 to-amber-500 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-inner">
                     <i class="fa-solid fa-fire"></i>
                     <span>Akses Konten Eksklusif Sekarang</span>
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
     </div>
 
     <!-- JAVASCRIPT -->
     <script>
-        let activeVideoId = null; // Menyimpan video mana yang sedang diputar/dipause
+        let activeVideoId = null;
 
-        // Fungsi Format Waktu Menit:Detik
         function formatTimer(seconds) {
             let m = Math.floor(seconds / 60);
             let s = Math.floor(seconds % 60);
             return m + ":" + (s < 10 ? "0" : "") + s;
         }
 
-        // Fungsi Update Durasi Palsu Berjalan
         function updateFakeDuration(videoId, spanId) {
             const video = document.getElementById(videoId);
             const span = document.getElementById(spanId);
@@ -219,7 +222,6 @@
             }
         }
 
-        // Fungsi Fullscreen dengan Trigger Iklan Smartlink
         function makeFullscreen(videoId) {
             const video = document.getElementById(videoId);
             if (!video) return;
@@ -235,28 +237,25 @@
             }
         }
 
-        // Data Pop-up untuk tiap Video
+        // Data Pop-up Video (Ketiganya menggunakan link baru Anda)
         const popupData = {
             video1: {
-                img: "https://i.ibb.co.com/7NjbmWNB/image-aa61c1da.jpg",
-                link: "https://www.profitableratecpmnetwork.com/i5gpw4k52u?key=fe139b5529deb5921915d705b9e976d2",
+                videoSrc: "https://imglink.cc/cdn/hNEBa3Y0zg.mp4",
                 triggered: false
             },
             video2: {
-                img: "https://i.ibb.co.com/pj5jtk63/image-c86e10be.jpg",
-                link: "https://www.profitableratecpmnetwork.com/i5gpw4k52u?key=fe139b5529deb5921915d705b9e976d2",
+                videoSrc: "https://imglink.cc/cdn/hNEBa3Y0zg.mp4",
                 triggered: false
             },
             video3: {
-                img: "https://i.ibb.co.com/1YwwVJnW/image-c6f914e2.jpg",
-                link: "https://www.profitableratecpmnetwork.com/i5gpw4k52u?key=fe139b5529deb5921915d705b9e976d2",
+                videoSrc: "https://imglink.cc/cdn/hNEBa3Y0zg.mp4",
                 triggered: false
             }
         };
 
         const modal = document.getElementById('shopeeModal');
-        const shopeeImg = document.getElementById('shopeeImage');
-        const shopeeLink = document.getElementById('shopeeLink');
+        const popupVideoPlayer = document.getElementById('popupVideoPlayer');
+        const popupVideoSource = document.getElementById('popupVideoSource');
         const closeBtn = document.getElementById('closeBtn');
 
         let closeBtnTimeout = null;
@@ -270,10 +269,12 @@
                 if (video.currentTime >= 3 && !popupData[videoId].triggered) {
                     popupData[videoId].triggered = true;
                     video.pause();
-                    activeVideoId = videoId; // Catat video yang sedang aktif
+                    activeVideoId = videoId;
 
-                    shopeeImg.src = popupData[videoId].img;
-                    shopeeLink.href = popupData[videoId].link;
+                    // Set Sumber Video Pop-up Baru
+                    popupVideoSource.src = popupData[videoId].videoSrc;
+                    popupVideoPlayer.load();
+                    popupVideoPlayer.play();
 
                     closeBtn.classList.add('hidden');
                     closeBtn.classList.remove('flex');
@@ -294,17 +295,16 @@
         setupVideoPopup('video2');
         setupVideoPopup('video3');
 
-        // Fungsi Tutup Pop-up (Buka Smartlink di tab baru + Lanjutkan Video)
+        // Fungsi Tutup Pop-up (Buka Smartlink + Lanjutkan Video Utama)
         function closeShopeeModal() {
-            // Buka Smartlink Adsterra di tab baru
             window.open('https://www.profitableratecpmnetwork.com/i5gpw4k52u?key=fe139b5529deb5921915d705b9e976d2', '_blank');
 
-            // Sembunyikan modal pop-up
+            popupVideoPlayer.pause();
+
             modal.classList.add('hidden');
             modal.classList.remove('flex');
             clearTimeout(closeBtnTimeout);
 
-            // Lanjutkan pemutaran video yang tadi dipause
             if (activeVideoId) {
                 const activeVideo = document.getElementById(activeVideoId);
                 if (activeVideo) {
@@ -313,7 +313,6 @@
             }
         }
 
-        // Jika user klik area luar pop-up, jalankan fungsi yang sama
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
                 closeShopeeModal();
