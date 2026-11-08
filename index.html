@@ -1,323 +1,641 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eksklusif Video Streaming & Hiburan</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #0f172a;
-            color: #f8fafc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .glow-effect:hover {
-            box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
-            transition: all 0.3s ease-in-out;
-        }
-        /* Style Animasi Pop-up Overlay */
-        .popup-overlay {
-            animation: fadeIn 0.3s ease-out forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        /* Trik menyembunyikan waktu bawaan browser */
-        video::-webkit-media-controls-time-remaining-display,
-        video::-webkit-media-controls-current-time-display {
-            display: none !important;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080d18">
+<title>KELAS BINTANG - Streaming Premium</title>
+<meta name="description" content="KELAS BINTANG - Koleksi hiburan dan video pilihan.">
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080d18;color:#fff;font-family:Arial,sans-serif}
+header{
+ position:sticky;top:0;z-index:20;background:#080d18;
+ border-bottom:1px solid #1c3150;padding:14px 4%;
+ display:flex;align-items:center;justify-content:space-between;gap:15px
+}
+.logo{font-size:22px;font-weight:900;color:#58aaff;white-space:nowrap}
+nav{display:flex;gap:8px}
+nav button{
+ border:0;background:transparent;color:#aebbd0;
+ padding:10px 12px;border-radius:6px;cursor:pointer;
+ font-weight:bold;font-size:13px;white-space:nowrap
+}
+nav button:hover,nav button.active{background:#16365e;color:#65b5ff}
+.search input{
+ width:170px;background:#111d30;border:1px solid #29466c;
+ border-radius:20px;padding:10px 13px;color:white;outline:none
+}
+.hero{
+ margin:22px auto;width:92%;min-height:350px;display:flex;
+ align-items:flex-end;border:1px solid #24466f;border-radius:12px;
+ overflow:hidden;
+ background: 
+ linear-gradient(0deg, rgba(8,13,24,0.9) 0%, rgba(8,13,24,0.3) 60%, transparent 100%),
+ url('https://i.ibb.co/yBggL5HN/00c8b2063909449a483e5414b5c792f0.jpg') center/cover no-repeat;
+}
+.hero-content{padding:35px;max-width:650px}
+.tag{color:#5bb2ff;font-size:12px;letter-spacing:3px;font-weight:bold}
+.hero h1{font-size:clamp(30px,6vw,54px);margin:12px 0}
+.hero p{color:#b8c8dc;line-height:1.7}
+.btn{
+ border:0;padding:12px 20px;border-radius:6px;
+ background:#1674c9;color:white;font-weight:bold;cursor:pointer
+}
+.btn:hover{background:#3299ef}
+.btn.secondary{background:#1a2940;border:1px solid #365477}
+section{padding:12px 4% 25px}
+.section-title{
+ font-size:20px;border-left:4px solid #3299ef;
+ padding-left:12px;margin-bottom:18px
+}
+.movies{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.movie{
+ background:#111d30;border:1px solid #203957;
+ border-radius:9px;overflow:hidden;cursor:pointer;transition:.2s
+}
+.movie:hover{transform:translateY(-4px);border-color:#3299ef}
+.poster{
+ display:block;width:100%;aspect-ratio:9/13;
+ object-fit:cover;background:#17263b
+}
+.movie-info{padding:11px}
+.movie-info h3{font-size:14px;margin:0 0 8px}
+.movie-info p{font-size:11px;color:#9eb0c9;margin:0}
+.rating{color:#55aaff}
+.page-title{margin:25px 4% 20px;font-size:25px;color:#65b5ff}
+.page-description{margin:0 4% 22px;color:#9eacc0;font-size:13px}
+.empty{
+ color:#91a5c0;text-align:center;padding:40px 10px;
+ background:#101b2d;border-radius:8px
+}
+footer{
+ background:#0d1728;border-top:1px solid #203957;
+ text-align:center;padding:35px 15px;color:#8294ae;
+ font-size:12px;line-height:2
+}
+footer strong{color:#58aaff}
+.modal{
+ display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);
+ z-index:100;overflow-y:auto;padding:15px
+}
+.modal-box{
+ max-width:850px;margin:25px auto;background:#101b2d;
+ border:1px solid #29466c;border-radius:10px;overflow:hidden
+}
+.modal-head{
+ display:flex;justify-content:space-between;
+ align-items:center;padding:15px
+}
+.close{background:none;border:0;color:white;font-size:28px;cursor:pointer}
+.player{width:100%;aspect-ratio:16/9;background:#000}
+.player iframe{width:100%;height:100%;border:0}
+.modal-info{padding:20px}
+.modal-info p{color:#aebbd0;line-height:1.7}
+.modal-actions{display:flex;gap:10px;flex-wrap:wrap}
+.hidden{display:none!important}
+
+/* STYLE IN-PAGE PUSH GAYA SHOPEE (ORANYE & MERAH) */
+.inpage-backdrop {
+ display: none;
+ position: fixed;
+ inset: 0;
+ background: rgba(0, 0, 0, 0.85);
+ z-index: 999;
+ justify-content: center;
+ align-items: center;
+ padding: 15px;
+}
+.inpage-box {
+ width: 100%;
+ max-width: 400px;
+ background: #fff;
+ color: #333;
+ border-radius: 12px;
+ overflow: hidden;
+ box-shadow: 0 15px 35px rgba(0,0,0,0.9);
+ animation: shopeePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+ position: relative;
+}
+@keyframes shopeePop {
+ from { transform: scale(0.7); opacity: 0; }
+ to { transform: scale(1); opacity: 1; }
+}
+.shopee-badge {
+ background: #ee4d2d;
+ color: white;
+ font-size: 11px;
+ font-weight: bold;
+ text-transform: uppercase;
+ padding: 4px 10px;
+ position: absolute;
+ top: 10px;
+ left: 10px;
+ border-radius: 4px;
+ z-index: 2;
+ letter-spacing: 0.5px;
+ box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+.inpage-close {
+ background: rgba(0,0,0,0.6);
+ border: 0;
+ color: white;
+ width: 28px;
+ height: 28px;
+ border-radius: 50%;
+ font-size: 16px;
+ font-weight: bold;
+ cursor: pointer;
+ display: grid;
+ place-items: center;
+ position: absolute;
+ top: 10px;
+ right: 10px;
+ z-index: 3;
+}
+.inpage-close:hover {
+ background: rgba(0,0,0,0.8);
+}
+.inpage-body {
+ cursor: pointer;
+ text-align: center;
+}
+.inpage-body img {
+ width: 100%;
+ aspect-ratio: 16/9;
+ object-fit: cover;
+ display: block;
+ background: #eee;
+}
+.shopee-content-pad {
+ padding: 16px;
+ text-align: left;
+}
+.shopee-title {
+ margin: 0 0 6px;
+ font-size: 15px;
+ font-weight: bold;
+ color: #222;
+ line-height: 1.3;
+}
+.shopee-desc {
+ margin: 0 0 12px;
+ font-size: 12px;
+ color: #666;
+ line-height: 1.4;
+}
+.shopee-price-row {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ margin-bottom: 12px;
+}
+.shopee-price {
+ color: #ee4d2d;
+ font-size: 18px;
+ font-weight: 900;
+}
+.shopee-sold {
+ font-size: 11px;
+ color: #757575;
+}
+.shopee-btn {
+ width: 100%;
+ background: #ee4d2d;
+ color: white;
+ border: 0;
+ padding: 10px;
+ border-radius: 6px;
+ font-weight: bold;
+ font-size: 13px;
+ cursor: pointer;
+ text-align: center;
+ transition: background 0.2s;
+}
+.shopee-btn:hover {
+ background: #d73211;
+}
+
+@media(max-width:800px){
+ header{flex-wrap:wrap}
+ nav{order:3;width:100%;overflow-x:auto}
+ .search input{width:145px}
+ .movies{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:520px){
+ .logo{font-size:19px}
+ nav button{font-size:12px;padding:9px}
+ .hero{min-height:280px}
+ .hero-content{padding:22px}
+ .movies{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .movie-info h3{font-size:12px}
+ .section-title{font-size:17px}
+}
+</style>
 </head>
-<body class="min-h-screen flex flex-col justify-between relative">
 
-    <!-- ADSTERRA: POPUNDER -->
-    <script src="https://pl31329010.profitableratecpmnetwork.com/0d/46/4d/0d464d59339b563e7d92eec0076a9552.js"></script>
+<body>
 
-    <!-- ADSTERRA: SOCIAL BAR -->
-    <script src="https://pl31329013.profitableratecpmnetwork.com/9d/45/cb/9d45cb09c38d48797d20b6237774d5ac.js"></script>
+<header>
+ <div class="logo">⭐ KELAS BINTANG</div>
 
-    <!-- HEADER / NAVBAR -->
-    <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
-        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <div class="bg-rose-600 p-2 rounded-lg text-white font-bold text-lg shadow-lg">
-                    <i class="fa-solid fa-play"></i>
-                </div>
-                <span class="text-xl font-extrabold tracking-wider bg-gradient-to-r from-rose-500 to-amber-500 bg-clip-text text-transparent">
-                    STREAMPLAY VIP
-                </span>
-            </div>
-            <a href="https://www.profitableratecpmnetwork.com/i5gpw4k52u?key=fe139b5529deb5921915d705b9e976d2" target="_blank" class="bg-rose-600 hover:bg-rose-700 text-white text-xs md:text-sm font-semibold px-4 py-2 rounded-full shadow-lg transition animate-pulse">
-                <i class="fa-solid fa-fire mr-1"></i> VIP Access
-            </a>
-        </div>
-    </header>
+ <nav id="navigation">
+  <button data-page="home" class="active">Beranda</button>
+  <button data-page="trending">Trending</button>
+  <button data-page="film">Film</button>
+  <button data-page="series">Serial TV</button>
+  <button data-page="saved">Daftar Saya</button>
+ </nav>
 
-    <!-- MAIN CONTAINER -->
-    <main class="max-w-4xl mx-auto px-4 py-6 w-full space-y-6">
+ <div class="search">
+  <input id="search" type="search" placeholder="Cari video...">
+ </div>
+</header>
 
-        <!-- Banner Info -->
-        <div class="text-center space-y-2 mb-4">
-            <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Koleksi Video Eksklusif Pilihan</h1>
-            <p class="text-slate-400 text-sm">Putar video langsung di bawah atau klik tombol download untuk mengunduh.</p>
-        </div>
+<main>
+ <div id="homePage">
+  <div class="hero">
+   <div class="hero-content">
+    <div class="tag">KELAS BINTANG ORIGINAL</div>
+    <h1>HIBURAN PILIHAN</h1>
+    <p>Temukan koleksi video dan hiburan pilihan dengan pengalaman menonton yang nyaman.</p>
+    <button class="btn" onclick="openMovie(0)">▶ TONTON SEKARANG</button>
+    <button class="btn secondary" onclick="showPage('trending')">Jelajahi Video</button>
+   </div>
+  </div>
 
-        <!-- VIDEO 1 -->
-        <div class="bg-slate-800/80 border border-slate-700 rounded-2xl overflow-hidden shadow-xl glow-effect">
-            <div class="p-4 border-b border-slate-700/60 flex justify-between items-center">
-                <span class="text-sm font-semibold text-rose-400"><i class="fa-solid fa-film mr-2"></i>Video 01</span>
-                <span class="text-xs bg-slate-700 px-2.5 py-1 rounded-full text-slate-300">HD Quality</span>
-            </div>
-            <!-- Video Player HTML5 Direct CDN -->
-            <div class="relative bg-black">
-                <video id="video1" controls poster="https://i.ibb.co/0R1R8vcQ/Screenshot-2026-1019-083853.png" class="w-full h-auto max-h-[480px] object-contain" ontimeupdate="updateFakeDuration('video1', 'durasi1')">
-                    <source src="https://imglink.cc/cdn/_I5ZhochKE.mp4" type="video/mp4">
-                    Browser Anda tidak mendukung pemutar video.
-                </video>
-                <!-- Teks Durasi Palsu -->
-                <div class="absolute bottom-3 left-3 bg-black/70 px-2 py-0.5 rounded text-[11px] font-mono text-white pointer-events-none z-10 flex items-center gap-1">
-                    <span id="durasi1">0:00</span> / <span>12:45</span>
-                </div>
-            </div>
-            <div class="p-4 flex flex-col sm:flex-row gap-3 items-center justify-between">
-                <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <span class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i> Status: Ready HD</span>
-                    <button onclick="makeFullscreen('video1')" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-md">
-                        <i class="fa-solid fa-expand"></i> Fullscreen
-                    </button>
-                </div>
-                <div class="w-full sm:w-auto">
-                    <a href="https://www.profitableratecpmnetwork.com/i5gpw4k52u?key=fe139b5529deb5921915d705b9e976d2" target="_blank" class="block text-center bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold px-6 py-2.5 rounded-xl transition shadow-lg">
-                        <i class="fa-solid fa-download mr-1.5"></i> Download Video 01
-                    </a>
-                </div>
-            </div>
-        </div>
+  <section>
+   <h2 class="section-title">🔥 Sedang Tren</h2>
+   <div class="movies" id="homeTrending"></div>
+  </section>
 
-        <!-- VIDEO 2 -->
-        <div class="bg-slate-800/80 border border-slate-700 rounded-2xl overflow-hidden shadow-xl glow-effect">
-            <div class="p-4 border-b border-slate-700/60 flex justify-between items-center">
-                <span class="text-sm font-semibold text-rose-400"><i class="fa-solid fa-film mr-2"></i>Video 02</span>
-                <span class="text-xs bg-slate-700 px-2.5 py-1 rounded-full text-slate-300">HD Quality</span>
-            </div>
-            <!-- Video Player HTML5 Direct CDN -->
-            <div class="relative bg-black">
-                <video id="video2" controls poster="https://i.ibb.co/jPrT5V9V/Screenshot-2026-1018-224752.png" class="w-full h-auto max-h-[480px] object-contain" ontimeupdate="updateFakeDuration('video2', 'durasi2')">
-                    <source src="https://imglink.cc/cdn/ByLJdnuK4y.mp4" type="video/mp4">
-                    Browser Anda tidak mendukung pemutar video.
-                </video>
-                <!-- Teks Durasi Palsu -->
-                <div class="absolute bottom-3 left-3 bg-black/70 px-2 py-0.5 rounded text-[11px] font-mono text-white pointer-events-none z-10 flex items-center gap-1">
-                    <span id="durasi2">0:00</span> / <span>14:20</span>
-                </div>
-            </div>
-            <div class="p-4 flex flex-col sm:flex-row gap-3 items-center justify-between">
-                <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <span class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i> Status: Ready HD</span>
-                    <button onclick="makeFullscreen('video2')" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-md">
-                        <i class="fa-solid fa-expand"></i> Fullscreen
-                    </button>
-                </div>
-                <div class="w-full sm:w-auto">
-                    <a href="https://www.profitableratecpmnetwork.com/i5gpw4k52u?key=fe139b5529deb5921915d705b9e976d2" target="_blank" class="block text-center bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold px-6 py-2.5 rounded-xl transition shadow-lg">
-                        <i class="fa-solid fa-download mr-1.5"></i> Download Video 02
-                    </a>
-                </div>
-            </div>
-        </div>
+  <section>
+   <h2 class="section-title">⭐ Film Pilihan</h2>
+   <div class="movies" id="homeFilm"></div>
+  </section>
+ </div>
 
-        <!-- VIDEO 3 -->
-        <div class="bg-slate-800/80 border border-slate-700 rounded-2xl overflow-hidden shadow-xl glow-effect">
-            <div class="p-4 border-b border-slate-700/60 flex justify-between items-center">
-                <span class="text-sm font-semibold text-rose-400"><i class="fa-solid fa-film mr-2"></i>Video 03</span>
-                <span class="text-xs bg-slate-700 px-2.5 py-1 rounded-full text-slate-300">HD Quality</span>
-            </div>
-            <!-- Video Player HTML5 Direct CDN -->
-            <div class="relative bg-black">
-                <video id="video3" controls poster="https://i.ibb.co/Hp9PVZ44/Screenshot-2026-1018-223529.png" class="w-full h-auto max-h-[480px] object-contain" ontimeupdate="updateFakeDuration('video3', 'durasi3')">
-                    <source src="https://imglink.cc/cdn/_vzz6zYiG-.mp4" type="video/mp4">
-                    Browser Anda tidak mendukung pemutar video.
-                </video>
-                <!-- Teks Durasi Palsu -->
-                <div class="absolute bottom-3 left-3 bg-black/70 px-2 py-0.5 rounded text-[11px] font-mono text-white pointer-events-none z-10 flex items-center gap-1">
-                    <span id="durasi3">0:00</span> / <span>18:10</span>
-                </div>
-            </div>
-            <div class="p-4 flex flex-col sm:flex-row gap-3 items-center justify-between">
-                <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <span class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i> Status: Ready HD</span>
-                    <button onclick="makeFullscreen('video3')" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-md">
-                        <i class="fa-solid fa-expand"></i> Fullscreen
-                    </button>
-                </div>
-                <div class="w-full sm:w-auto">
-                    <a href="https://www.profitableratecpmnetwork.com/i5gpw4k52u?key=fe139b5529deb5921915d705b9e976d2" target="_blank" class="block text-center bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold px-6 py-2.5 rounded-xl transition shadow-lg">
-                        <i class="fa-solid fa-download mr-1.5"></i> Download Video 03
-                    </a>
-                </div>
-            </div>
-        </div>
+ <div id="listingPage" class="hidden">
+  <h1 class="page-title" id="pageTitle"></h1>
+  <p class="page-description" id="pageDescription"></p>
+  <section>
+   <div class="movies" id="listingMovies"></div>
+   <div id="emptyMessage" class="empty hidden"></div>
+  </section>
+ </div>
+</main>
 
-        <!-- NATIVE BANNER DI BAWAH SEMUA VIDEO -->
-        <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/60 text-center min-h-[120px] flex flex-col items-center justify-center mt-8">
-            <span class="text-[10px] uppercase tracking-widest text-slate-500 mb-2">Advertisement</span>
-            <script async="async" data-cfasync="false" src="https://pl31329011.profitableratecpmnetwork.com/5f5871d4eb4905bdb97d4837d5aa8a26/invoke.js"></script>
-            <div id="container-5f5871d4eb4905bdb97d4837d5aa8a26"></div>
-        </div>
+<footer>
+ <strong>⭐ KELAS BINTANG</strong><br>
+ Platform hiburan dan video pilihan.<br>
+ © 2026 KELAS BINTANG. All Rights Reserved.
+</footer>
 
-    </main>
+<div class="modal" id="modal">
+ <div class="modal-box">
+  <div class="modal-head">
+   <strong id="modalTitle">KELAS BINTANG</strong>
+   <button class="close" onclick="closeModal()">×</button>
+  </div>
+  <div class="player" id="player">
+   <div style="height:100%;display:grid;place-items:center;color:#aaa">
+    Tekan tombol putar untuk memulai.
+   </div>
+  </div>
+  <div class="modal-info">
+   <h2 id="detailTitle"></h2>
+   <p id="detailDesc"></p>
+   <div class="modal-actions">
+    <button class="btn" onclick="playVideo()">▶ PUTAR VIDEO</button>
+    <button class="btn secondary" onclick="saveMovie()">♥ SIMPAN</button>
+   </div>
+  </div>
+ </div>
+</div>
 
-    <!-- FOOTER -->
-    <footer class="bg-slate-900 border-t border-slate-800 py-6 mt-8 text-center text-xs text-slate-500">
-        <p>&copy; 2026 StreamPlay VIP. All rights reserved.</p>
-    </footer>
-
-    <!-- MODAL POPUP (Berisi Video Pendek Baru) -->
-    <div id="shopeeModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-2 sm:p-4">
-        <div class="relative w-[95%] max-w-lg h-auto max-h-[90vh] bg-slate-900 border border-slate-700 rounded-2xl overflow-hidden shadow-2xl popup-overlay flex flex-col items-center">
-            
-            <!-- Tombol Close (Membuka Smartlink + Lanjut Video) -->
-            <button id="closeBtn" onclick="closeShopeeModal()" class="hidden absolute top-3.5 right-3.5 bg-slate-800/90 hover:bg-rose-600 text-white w-9 h-9 rounded-full flex items-center justify-center transition duration-300 z-20 shadow-lg border border-white/40 text-base font-bold cursor-pointer">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-            <!-- Area Video & Tombol Link Pop-up -->
-            <div class="w-full flex flex-col h-full">
-                <!-- Pemutar Video di dalam Pop-up -->
-                <div class="w-full flex-grow overflow-hidden bg-black flex items-center justify-center p-1">
-                    <video id="popupVideoPlayer" class="w-full h-auto max-h-[75vh] object-contain" autoplay muted loop playsinline>
-                        <source id="popupVideoSource" src="" type="video/mp4">
-                        Browser Anda tidak mendukung video.
-                    </video>
-                </div>
-                <!-- Tombol Klik Mengarah ke Smartlink Adsterra -->
-                <a id="shopeeLink" href="https://www.profitableratecpmnetwork.com/i5gpw4k52u?key=fe139b5529deb5921915d705b9e976d2" target="_blank" class="p-3.5 bg-gradient-to-r from-rose-600 to-amber-500 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-inner">
-                    <i class="fa-solid fa-fire"></i>
-                    <span>Akses Konten Eksklusif Sekarang</span>
-                </a>
-            </div>
-        </div>
+<!-- IN-PAGE PUSH GAYA SHOPEE DENGAN GAMBAR CUSTOM -->
+<div class="inpage-backdrop" id="inpageBackdrop">
+ <div class="inpage-box">
+  <div class="shopee-badge">FLASH SALE 🔥</div>
+  <button class="inpage-close" onclick="closeInpagePush(event)">×</button>
+  
+  <div class="inpage-body" onclick="clickInpageContent()">
+   <img src="https://i.ibb.co.com/MyzzDP6K/IMG-ac7ef777-0e7e-4973-8faf-c6badbc6afb3.jpg" alt="Promo Flash Sale">
+   <div class="shopee-content-pad">
+    <h4 class="shopee-title">Spesial Promo Shopee</h4>
+    <p class="shopee-desc">Dapatkan Promo Menarik di Shopee.</p>
+    <div class="shopee-price-row">
+     <span class="shopee-price">GRATIS </span>
+     <span class="shopee-sold">Terjual 10RB+</span>
     </div>
+    <button class="shopee-btn">AMBIL SEKARANG</button>
+   </div>
+  </div>
+ </div>
+</div>
 
-    <!-- JAVASCRIPT -->
-    <script>
-        let activeVideoId = null;
+<script>
 
-        function formatTimer(seconds) {
-            let m = Math.floor(seconds / 60);
-            let s = Math.floor(seconds % 60);
-            return m + ":" + (s < 10 ? "0" : "") + s;
-        }
+// SMARTLINK ADSTERRA
+const SMARTLINK="https://www.profitableratecpmnetwork.com/hh55phupz7?key=035891703dff41ba6e0911050a5989af";
 
-        function updateFakeDuration(videoId, spanId) {
-            const video = document.getElementById(videoId);
-            const span = document.getElementById(spanId);
-            if(video && span) {
-                let fakeCurrent = video.currentTime * 35; 
-                span.innerText = formatTimer(fakeCurrent);
-            }
-        }
+// TOTAL 19 VIDEO DAN 19 THUMBNAIL
+const videos=[
 
-        function makeFullscreen(videoId) {
-            const video = document.getElementById(videoId);
-            if (!video) return;
+// 8 VIDEO LAMA
+{
+ title:"Cinta Membara Tante Mirna 💦",category:"trending",year:"2026",rating:"9.6",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co.com/cS2QGnLf/e89771e819d28a1ae0388d2af852d2f9.jpg",
+ embed:"https://trbnvideo.live/e/q2Zg5y2K"
+},
+{
+ title:"Gairah J4nda Muda",category:"trending",year:"2026",rating:"9.4",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co.com/qMDYTsbY/ae5557d0a21d9be9169a2019329f8e5d.jpg",
+ embed:"https://trbnvideo.live/e/iS07IqQg"
+},
+{
+ title:"Malam Terakhir",category:"trending",year:"2026",rating:"9.2",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co.com/4ZsVhJkR/1790091907304.jpg",
+ embed:"https://trbnvideo.live/e/jqUE2s1j"
+},
+{
+ title:"Pesona bu S4lsa",category:"trending",year:"2026",rating:"9.5",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co.com/Rqw6xhJ/1790091869047.jpg",
+ embed:"https://trbnvideo.live/e/rF4FRrTZ"
+},
+{
+ title:"Tergoda Rayuan ibu kost",category:"film",year:"2026",rating:"9.1",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co/4wsHyS8n/1793065681242.jpg",
+ embed:"https://trbnvideo.live/e/TfBDyY4J"
+},
+{
+ title:"Bintang Kehidupan",category:"film",year:"2026",rating:"9.3",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co.com/7dfrRv4k/1793129144788.jpg",
+ embed:"https://trbnvideo.live/e/l8lwFSp5"
+},
+{
+ title:"Di Balik Senyuman",category:"series",year:"2026",rating:"9.0",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co/Z6qpYMWZ/IMG-20261104-100544-611.jpg",
+ embed:"https://trbnvideo.live/e/nQ29SZ0p"
+},
+{
+ title:"Kisah Sang guru dan murid",category:"series",year:"2026",rating:"9.7",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co/2H47tZc/IMG-20261104-100540-372.jpg",
+ embed:"https://trbnvideo.live/e/7Ig1S0Yc"
+},
 
-            window.open('https://www.profitableratecpmnetwork.com/i5gpw4k52u?key=fe139b5529deb5921915d705b9e976d2', '_blank');
+// 11 VIDEO BARU (DENGAN JUDUL DEWASA YANG MEMIKAT)
+{
+ title:"Skandal Terlarang di Kamar Mandi 🤤",category:"trending",year:"2026",rating:"9.4",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co.com/3mr8M7v7/1793767600887.jpg",
+ embed:"https://trbnvideo.live/e/iS07IqQg"
+},
+{
+ title:"Sentuhan Menggoda Mbak Siska 🔥",category:"trending",year:"2026",rating:"9.3",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co.com/9mBnCGtS/1793767589103.jpg",
+ embed:"https://trbnvideo.live/e/jqUE2s1j"
+},
+{
+ title:"Desahan Malam Teman Sekantor 💦",category:"trending",year:"2026",rating:"9.2",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co.com/M52PQp5p/1793767574587.jpg",
+ embed:"https://trbnvideo.live/e/oxWXzULf"
+},
+{
+ title:"Goyangan Panas Pemersatu Bangsa 😍",category:"trending",year:"2026",rating:"9.1",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co.com/0VXctt0x/1793767508529.jpg",
+ embed:"https://trbnvideo.live/e/lSCeUX2g"
+},
+{
+ title:"Aksi Nakal Suster Cantik Menghibur Pasien 🥵",category:"film",year:"2026",rating:"9.5",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co.com/v4gL0StF/1793767490790.jpg",
+ embed:"https://trbnvideo.live/e/TfBDyY4J"
+},
+{
+ title:"Rayuan Maut Istri Orang di Belakang Pintu 🍑",category:"film",year:"2026",rating:"9.3",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co.com/xKxy1wqZ/1793767469519.jpg",
+ embed:"https://trbnvideo.live/e/CJqvagsK"
+},
+{
+ title:"Bermain Cinta Diam-Diam Saat Rumah Sepi 💦",category:"film",year:"2026",rating:"9.2",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co.com/v6tCJFCc/1793767451951.jpg",
+ embed:"https://trbnvideo.live/e/sEButW2M"
+},
+{
+ title:"Malam Pertama Penuh Gairah Tanpa Batas ✨",category:"film",year:"2026",rating:"9.4",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co.com/DPBQHxhZ/1793767445024.jpg",
+ embed:"https://trbnvideo.live/e/10VFNLlE"
+},
+{
+ title:"Pijat Plus-Plus Berujung Nikmat 🤤",category:"film",year:"2026",rating:"9.1",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co.com/LhY0hZpK/adb5c19a3fa43908058f009dd4ee995a.jpg",
+ embed:"https://trbnvideo.live/e/2buj45jB"
+},
+{
+ title:"Sentuhan Lembut Menggoda Iman 🍑",category:"series",year:"2026",rating:"9.3",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co/2H47tZc/IMG-20261104-100540-372.jpg",
+ embed:"https://trbnvideo.live/e/l8lwFSp5"
+},
+{
+ title:"Gairah Tersembunyi di Balik Jendela 💦",category:"series",year:"2026",rating:"9.5",
+ desc:"Koleksi video pilihan KELAS BINTANG.",
+ image:"https://i.ibb.co/Z6qpYMWZ/IMG-20261104-100544-611.jpg",
+ embed:"https://trbnvideo.live/e/nQ29SZ0p"
+}
+];
 
-            if (video.requestFullscreen) {
-                video.requestFullscreen();
-            } else if (video.webkitRequestFullscreen) { /* Safari */
-                video.webkitRequestFullscreen();
-            } else if (video.msRequestFullscreen) { /* IE11 */
-                video.msRequestFullscreen();
-            }
-        }
+let selected=0;
+let currentPage="home";
+let searchQuery="";
+let inpageInterval=null;
 
-        // Data Pop-up Video (Ketiganya menggunakan link baru Anda)
-        const popupData = {
-            video1: {
-                videoSrc: "https://imglink.cc/cdn/hNEBa3Y0zg.mp4",
-                triggered: false
-            },
-            video2: {
-                videoSrc: "https://imglink.cc/cdn/hNEBa3Y0zg.mp4",
-                triggered: false
-            },
-            video3: {
-                videoSrc: "https://imglink.cc/cdn/hNEBa3Y0zg.mp4",
-                triggered: false
-            }
-        };
+function savedIds(){
+ try{return JSON.parse(localStorage.getItem("kelasBintangSaved")||"[]")}
+ catch(e){return []}
+}
 
-        const modal = document.getElementById('shopeeModal');
-        const popupVideoPlayer = document.getElementById('popupVideoPlayer');
-        const popupVideoSource = document.getElementById('popupVideoSource');
-        const closeBtn = document.getElementById('closeBtn');
+function renderMovies(list,target){
+ const el=document.getElementById(target);
+ el.innerHTML=list.map(v=>{
+  const index=videos.indexOf(v);
+  return `
+   <div class="movie" onclick="openMovie(${index})">
+    <img class="poster" src="${v.image}" loading="lazy" alt="${v.title}">
+    <div class="movie-info">
+     <h3>${v.title}</h3>
+     <p>${v.year} · <span class="rating">★ ${v.rating}</span></p>
+    </div>
+   </div>`;
+ }).join("");
+}
 
-        let closeBtnTimeout = null;
+function showPage(page){
+ currentPage=page;
+ searchQuery="";
+ document.getElementById("search").value="";
+ document.getElementById("homePage").classList.toggle("hidden",page!=="home");
+ document.getElementById("listingPage").classList.toggle("hidden",page==="home");
 
-        function setupVideoPopup(videoId) {
-            const video = document.getElementById(videoId);
-            if (!video) return;
+ document.querySelectorAll("#navigation button").forEach(btn=>{
+  btn.classList.toggle("active",btn.dataset.page===page);
+ });
 
-            video.addEventListener('timeupdate', function() {
-                // Muncul di detik ke-3
-                if (video.currentTime >= 3 && !popupData[videoId].triggered) {
-                    popupData[videoId].triggered = true;
-                    video.pause();
-                    activeVideoId = videoId;
+ if(page==="home"){
+  renderHome();
+  window.scrollTo(0,0);
+  return;
+ }
 
-                    // Set Sumber Video Pop-up Baru
-                    popupVideoSource.src = popupData[videoId].videoSrc;
-                    popupVideoPlayer.load();
-                    popupVideoPlayer.play();
+ const titles={
+  trending:"🔥 Trending",
+  film:"⭐ Koleksi Film",
+  series:"🎬 Serial TV",
+  saved:"♥ Daftar Saya"
+ };
+ const descriptions={
+  trending:"Video yang sedang menjadi pilihan.",
+  film:"Jelajahi koleksi film pilihan.",
+  series:"Temukan koleksi serial TV.",
+  saved:"Video yang sudah kamu simpan."
+ };
 
-                    closeBtn.classList.add('hidden');
-                    closeBtn.classList.remove('flex');
+ document.getElementById("pageTitle").innerText=titles[page];
+ document.getElementById("pageDescription").innerText=descriptions[page];
+ renderListing();
+ window.scrollTo(0,0);
+}
 
-                    modal.classList.remove('hidden');
-                    modal.classList.add('flex');
+function renderHome(){
+ renderMovies(videos.filter(v=>v.category==="trending"),"homeTrending");
+ renderMovies(videos.filter(v=>v.category==="film"),"homeFilm");
+}
 
-                    clearTimeout(closeBtnTimeout);
-                    closeBtnTimeout = setTimeout(function() {
-                        closeBtn.classList.remove('hidden');
-                        closeBtn.classList.add('flex');
-                    }, 1500);
-                }
-            });
-        }
+function renderListing(){
+ let list=[];
 
-        setupVideoPopup('video1');
-        setupVideoPopup('video2');
-        setupVideoPopup('video3');
+ if(currentPage==="trending")list=videos.filter(v=>v.category==="trending");
+ if(currentPage==="film")list=videos.filter(v=>v.category==="film");
+ if(currentPage==="series")list=videos.filter(v=>v.category==="series");
+ if(currentPage==="saved")list=videos.filter(v=>savedIds().includes(videos.indexOf(v)));
 
-        // Fungsi Tutup Pop-up (Buka Smartlink + Lanjutkan Video Utama)
-        function closeShopeeModal() {
-            window.open('https://www.profitableratecpmnetwork.com/i5gpw4k52u?key=fe139b5529deb5921915d705b9e976d2', '_blank');
+ if(searchQuery){
+  list=list.filter(v=>v.title.toLowerCase().includes(searchQuery));
+ }
 
-            popupVideoPlayer.pause();
+ renderMovies(list,"listingMovies");
 
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            clearTimeout(closeBtnTimeout);
+ const empty=document.getElementById("emptyMessage");
+ empty.classList.toggle("hidden",list.length>0);
+ empty.innerText=searchQuery?"Video tidak ditemukan.":"Belum ada video di bagian ini.";
+}
 
-            if (activeVideoId) {
-                const activeVideo = document.getElementById(activeVideoId);
-                if (activeVideo) {
-                    activeVideo.play();
-                }
-            }
-        }
+function openMovie(index){
+ // Klik thumbnail membuka Smartlink di tab baru terlebih dahulu
+ window.open(SMARTLINK, "_blank", "noopener");
 
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                closeShopeeModal();
-            }
-        });
-    </script>
+ selected=index;
+ const v=videos[index];
+
+ document.getElementById("modal").style.display="block";
+ document.getElementById("modalTitle").innerText=v.title;
+ document.getElementById("detailTitle").innerText=v.title;
+ document.getElementById("detailDesc").innerText=v.desc;
+
+ document.getElementById("player").innerHTML=
+ '<div style="height:100%;display:grid;place-items:center;color:#aaa">Tekan PUTAR VIDEO untuk memulai.</div>';
+}
+
+function playVideo(){
+ const v=videos[selected];
+
+ window.open(SMARTLINK,"_blank","noopener");
+
+ document.getElementById("player").innerHTML=`
+ <iframe src="${v.embed}"
+ allow="autoplay; fullscreen; picture-in-picture"
+ allowfullscreen loading="lazy"></iframe>`;
+}
+
+// TIMER IN-PAGE PUSH DI BERANDA (MUNCUL TIAP 10 DETIK)
+function startInpageTimer(){
+ if(inpageInterval) clearInterval(inpageInterval);
+
+ inpageInterval = setInterval(()=>{
+  showInpagePush();
+ }, 10000);
+}
+
+function showInpagePush(){
+ document.getElementById("inpageBackdrop").style.display = "flex";
+}
+
+function closeInpagePush(e){
+ e.stopPropagation();
+ window.open(SMARTLINK, "_blank", "noopener");
+ document.getElementById("inpageBackdrop").style.display = "none";
+}
+
+function clickInpageContent(){
+ window.open(SMARTLINK, "_blank", "noopener");
+ document.getElementById("inpageBackdrop").style.display = "none";
+}
+
+function closeModal(){
+ document.getElementById("modal").style.display="none";
+ document.getElementById("player").innerHTML="";
+}
+
+function saveMovie(){
+ let ids=savedIds();
+
+ if(!ids.includes(selected))ids.push(selected);
+
+ localStorage.setItem("kelasBintangSaved",JSON.stringify(ids));
+
+ alert("Video berhasil disimpan ke Daftar Saya.");
+
+ if(currentPage==="saved")renderListing();
+}
+
+document.getElementById("navigation").addEventListener("click",e=>{
+ const btn=e.target.closest("button[data-page]");
+ if(btn)showPage(btn.dataset.page);
+});
+
+document.getElementById("search").addEventListener("input",e=>{
+ searchQuery=e.target.value.trim().toLowerCase();
+
+ if(currentPage==="home")showPage("trending");
+ else renderListing();
+});
+
+document.getElementById("modal").addEventListener("click",e=>{
+ if(e.target.id==="modal")closeModal();
+});
+
+renderHome();
+
+// Langsung jalankan timer 10 detik saat halaman beranda dimuat
+startInpageTimer();
+
+</script>
 </body>
 </html>
